@@ -1,9 +1,9 @@
 import streamlit as st
-import openai
-from langchain_openai import ChatOpenAI
+# import openai
+# from langchain_openai import ChatOpenAI
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_community.llms import Ollama
+from langchain_ollama import ChatOllama
 import os
 
 import os
@@ -11,9 +11,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 ## Langsmith Tracking
-os.environ["LANGCHAIN_API_KEY"]=os.getenv("LANGCHAIN_API_KEY")
-os.environ["LANGCHAIN_TRACING_V2"]="true"
-os.environ["LANGCHAIN_PROJECT"]="Simple Q&A Chatbot With Ollama"
+# os.environ["LANGCHAIN_API_KEY"]=os.getenv("LANGCHAIN_API_KEY")
+# os.environ["LANGCHAIN_TRACING_V2"]="true"
+# os.environ["LANGCHAIN_PROJECT"]="Simple Q&A Chatbot With Ollama"
 
 ## Prompt Template
 prompt=ChatPromptTemplate.from_messages(
@@ -24,18 +24,18 @@ prompt=ChatPromptTemplate.from_messages(
 )
 
 def generate_response(question,llm,temperature,max_tokens):
-    llm=Ollama(model=llm)
+    llm=ChatOllama(model=llm,temperature=temperature,max_tokens=max_tokens)
     output_parser=StrOutputParser()
     chain=prompt|llm|output_parser
     answer=chain.invoke({'question':question})
     return answer
 
 ## #Title of the app
-st.title("Enhanced Q&A Chatbot With OpenAI")
+st.title("Enhanced Q&A Chatbot With Ollama")
 
 
 ## Select the OpenAI model
-llm=st.sidebar.selectbox("Select Open Source model",["mistral"])
+llm=st.sidebar.selectbox("Select Open Source model",["llama3.1"])
 
 ## Adjust response parameter
 temperature=st.sidebar.slider("Temperature",min_value=0.0,max_value=1.0,value=0.7)
