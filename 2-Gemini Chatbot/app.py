@@ -1,6 +1,5 @@
 import streamlit as st
-import openai
-from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 import os
@@ -10,9 +9,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 ## Langsmith Tracking
-os.environ["LANGCHAIN_API_KEY"]=os.getenv("LANGCHAIN_API_KEY")
-os.environ["LANGCHAIN_TRACING_V2"]="true"
-os.environ["LANGCHAIN_PROJECT"]="Simple Q&A Chatbot With OPENAI"
+# os.environ["LANGCHAIN_API_KEY"]=os.getenv("LANGCHAIN_API_KEY")
+# os.environ["LANGCHAIN_TRACING_V2"]="true"
+# os.environ["LANGCHAIN_PROJECT"]="Simple Q&A Chatbot With OPENAI"
 
 ## Prompt Template
 prompt=ChatPromptTemplate.from_messages(
@@ -23,25 +22,25 @@ prompt=ChatPromptTemplate.from_messages(
 )
 
 def generate_response(question,api_key,engine,temperature,max_tokens):
-    openai.api_key=api_key
+    api_key_gemini=api_key
 
-    llm=ChatOpenAI(model=engine)
+    llm=ChatGoogleGenerativeAI(api_key=api_key_gemini,model=engine,temperature=temperature,max_tokens=max_tokens)
     output_parser=StrOutputParser()
     chain=prompt|llm|output_parser
     answer=chain.invoke({'question':question})
     return answer
 
 ## #Title of the app
-st.title("Enhanced Q&A Chatbot With OpenAI")
+st.title("Enhanced Q&A Chatbot With Gemini")
 
 
 
 ## Sidebar for settings
 st.sidebar.title("Settings")
-api_key=st.sidebar.text_input("Enter your Open AI API Key:",type="password")
+api_key=st.sidebar.text_input("Enter your Gemini API Key:",type="password")
 
 ## Select the OpenAI model
-engine=st.sidebar.selectbox("Select Open AI model",["gpt-4o","gpt-4-turbo","gpt-4"])
+engine=st.sidebar.selectbox("Select Open AI model",["gemini-1.5-flash","gemini-1.5-pro","gemini-1.0-pro	"])
 
 ## Adjust response parameter
 temperature=st.sidebar.slider("Temperature",min_value=0.0,max_value=1.0,value=0.7)
