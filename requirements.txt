@@ -34,3 +34,5 @@ streamlit
 langchain_google_genai
 langchain_ollama
 pyowm
+PLI
+requests

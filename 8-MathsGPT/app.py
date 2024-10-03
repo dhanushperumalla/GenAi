@@ -33,7 +33,6 @@ wikipedia_tool=Tool(
 ## Initializa the MAth tool
 
 math_chain=LLMMathChain.from_llm(llm=llm)
-
 calculator=Tool(
     name="Calculator",
     func=math_chain.run,
